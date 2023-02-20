@@ -1,42 +1,82 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Karla:wght@700&display=swap");
+
+body {
+  background-color: #1c1c1c;
+  color: #293264;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h1,
+h3 {
+  font-family: "Karla", sans-serif;
+  font-weight: 700;
+}
+
+.btn {
+  text-align: center;
+  color: #ffffff;
+  background-color: #4d5b9e;
+  border: none;
+  border-radius: 15px;
+  transition: ease-in-out 0.25s background-color;
+  cursor: pointer;
+  padding-bottom: 4px;
+}
+
+.btn:hover {
+  background-color: #3c477e;
+}
+
+.container {
+  width: 550px;
+  height: 550px;
+  background-color: #f5f7fb;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.blob-top,
+.blob-bottom {
+  position: absolute;
+  pointer-events: none;
+}
+
+.blob-top {
+  top: 0;
+  right: 0;
+}
+
+.blob-bottom {
+  bottom: 0;
+  left: 0;
+}
+
+.intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.intro p {
+  margin-bottom: 30px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.intro h1 {
+  margin-bottom: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.intro__button {
+  font-size: 16px;
+  line-height: 19px;
+  width: 100%;
+  max-width: 190px;
+  height: 50px;
 }

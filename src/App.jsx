@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { uid } from "uid";
+import Question from "./components/Question";
 import blobsTop from "./assets/blobs-top.svg";
 import blobsBottom from "./assets/blobs-bottom.svg";
 import "./App.css";
@@ -11,27 +13,32 @@ function App() {
     setStart(true);
     newGame();
   }
-
   function newGame() {
     async function requestQuiz() {
       const response = await fetch(
         "https://opentdb.com/api.php?amount=5&category=15&difficulty=easy&type=multiple"
       );
       const data = await response.json();
+
       setQuestions(
         data.results.map((result, index) => {
           return {
-            id: index + 1,
+            id: uid(),
             question: result.question,
             answer: result.correct_answer,
             incorrect_answers: result.incorrect_answers,
           };
         })
       );
-      console.log(questions);
     }
     requestQuiz();
-    console.log(questions);
+  }
+  console.log(questions);
+
+  function renderQuestions() {
+    return questions.map((question, index) => (
+      <Question key={index} id={question.id} {...question} />
+    ));
   }
 
   return (
@@ -39,7 +46,7 @@ function App() {
       <img className="blob-top" src={blobsTop} />
       <img className="blob-bottom" src={blobsBottom} />
       {start ? (
-        <h1>test</h1>
+        <div className="question-container">{renderQuestions()}</div>
       ) : (
         <div className="intro">
           <h1>Quizzical</h1>

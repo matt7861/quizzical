@@ -1,4 +1,24 @@
-const Question = ({ question, incorrect_answers, answer, id }) => {
+import { useEffect } from "react";
+
+const Question = ({
+  question,
+  incorrect_answers,
+  answer,
+  user_answer,
+  attemptAnswer,
+  id,
+  showAnswers,
+  start,
+}) => {
+  useEffect(() => {
+    renderAnswerButtons();
+  }, [start]);
+
+  function shuffleArray(array) {
+    array.sort(() => Math.random() - 0.5);
+    return array;
+  }
+
   function renderAnswerButtons() {
     const buttonArray = [];
 
@@ -9,13 +29,26 @@ const Question = ({ question, incorrect_answers, answer, id }) => {
     shuffleArray(buttonArray);
 
     return buttonArray.map((btn, index) => {
-      return <button key={index}>{btn}</button>;
+      return (
+        <button
+          className={highlightButtonAnswers(user_answer, answer, btn)}
+          onClick={(e) => attemptAnswer(id, e)}
+          key={index}
+        >
+          {btn}
+        </button>
+      );
     });
   }
 
-  function shuffleArray(array) {
-    array.sort(() => Math.random() - 0.5);
-    return array;
+  function highlightButtonAnswers(user_answer, correct_answer, btnText) {
+    if (showAnswers) {
+      if (user_answer === btnText) {
+        return "user-answer";
+      } else if (correct_answer === btnText) {
+        return "correct-answer";
+      }
+    }
   }
 
   return (

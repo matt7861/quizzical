@@ -91,3 +91,12 @@ h3 {
   position: relative;
   z-index: 1;
 }
+
+.user-answer {
+  background-color: #94d7a2;
+  border-color: #94d7a2;
+}
+.correct-answer {
+  background-color: pink;
+  border-color: red;
+}

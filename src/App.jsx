@@ -8,6 +8,7 @@ import "./App.css";
 function App() {
   const [start, setStart] = useState(false);
   const [questions, setQuestions] = useState([]);
+  const [showAnswers, setShowAnswers] = useState(false);
 
   function startGame() {
     setStart(true);
@@ -21,24 +22,47 @@ function App() {
       const data = await response.json();
 
       setQuestions(
-        data.results.map((result, index) => {
+        data.results.map((result) => {
           return {
             id: uid(),
             question: result.question,
             answer: result.correct_answer,
             incorrect_answers: result.incorrect_answers,
+            user_answer: "",
           };
         })
       );
     }
     requestQuiz();
   }
-  console.log(questions);
 
   function renderQuestions() {
     return questions.map((question, index) => (
-      <Question key={index} id={question.id} {...question} />
+      <Question
+        key={index}
+        id={question.id}
+        attemptAnswer={attemptAnswer}
+        showAnswers={showAnswers}
+        start={start}
+        {...question}
+      />
     ));
+  }
+
+  function attemptAnswer(id, e) {
+    const selectedAnswer = e.currentTarget.textContent;
+
+    setQuestions((prevQuestions) => {
+      return prevQuestions.map((question) => {
+        return question.id === id
+          ? { ...question, user_answer: selectedAnswer }
+          : question;
+      });
+    });
+  }
+
+  function checkAnswers(questions) {
+    setShowAnswers(true);
   }
 
   return (
@@ -46,7 +70,10 @@ function App() {
       <img className="blob-top" src={blobsTop} />
       <img className="blob-bottom" src={blobsBottom} />
       {start ? (
-        <div className="question-container">{renderQuestions()}</div>
+        <div className="question-container">
+          {renderQuestions()}
+          <button onClick={checkAnswers}>Check answers</button>
+        </div>
       ) : (
         <div className="intro">
           <h1>Quizzical</h1>

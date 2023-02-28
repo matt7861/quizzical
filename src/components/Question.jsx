@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Question = ({
   question,
@@ -8,27 +8,39 @@ const Question = ({
   attemptAnswer,
   id,
   showAnswers,
+  questions,
   start,
 }) => {
   useEffect(() => {
-    renderAnswerButtons();
-  }, [start]);
+    generateAnswerButtons();
+    renderButtons();
+  }, [showAnswers]);
+
+  useEffect(() => {
+    renderButtons();
+  }, [showAnswers]);
+
+  const [buttonArray, setButtonArray] = useState(generateAnswerButtons());
+  const [answerButtons, setAnswerButtons] = useState(null);
 
   function shuffleArray(array) {
     array.sort(() => Math.random() - 0.5);
     return array;
   }
 
-  function renderAnswerButtons() {
-    const buttonArray = [];
-
+  function generateAnswerButtons() {
+    const buttons = [];
     for (let i = 0; i < incorrect_answers.length; i++) {
-      buttonArray.push(incorrect_answers[i]);
+      buttons.push(incorrect_answers[i]);
     }
-    buttonArray.push(answer);
-    shuffleArray(buttonArray);
+    buttons.push(answer);
+    shuffleArray(buttons);
 
-    return buttonArray.map((btn, index) => {
+    return buttons;
+  }
+
+  function renderButtons() {
+    const answerButtons = buttonArray.map((btn, index) => {
       return (
         <button
           className={highlightButtonAnswers(user_answer, answer, btn)}
@@ -39,22 +51,25 @@ const Question = ({
         </button>
       );
     });
+    console.log(answerButtons);
+
+    setAnswerButtons(answerButtons);
   }
 
   function highlightButtonAnswers(user_answer, correct_answer, btnText) {
-    if (showAnswers) {
-      if (user_answer === btnText) {
-        return "user-answer";
-      } else if (correct_answer === btnText) {
-        return "correct-answer";
-      }
+    if (!showAnswers) return;
+
+    if (user_answer === btnText) {
+      return "user-answer";
+    } else if (correct_answer === btnText) {
+      return "correct-answer";
     }
   }
 
   return (
     <div className="question">
       <p>{question}</p>
-      {renderAnswerButtons()}
+      {answerButtons}
     </div>
   );
 };

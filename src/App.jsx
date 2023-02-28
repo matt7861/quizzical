@@ -9,11 +9,15 @@ function App() {
   const [start, setStart] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [showAnswers, setShowAnswers] = useState(false);
+  const [correctAnswerScore, setCorrectAnswerScore] = useState(0);
 
   function startGame() {
     setStart(true);
+    setShowAnswers(false);
+    setCorrectAnswerScore(0);
     newGame();
   }
+
   function newGame() {
     async function requestQuiz() {
       const response = await fetch(
@@ -44,6 +48,7 @@ function App() {
         attemptAnswer={attemptAnswer}
         showAnswers={showAnswers}
         start={start}
+        questions={questions}
         {...question}
       />
     ));
@@ -51,28 +56,44 @@ function App() {
 
   function attemptAnswer(id, e) {
     const selectedAnswer = e.currentTarget.textContent;
-
     setQuestions((prevQuestions) => {
       return prevQuestions.map((question) => {
-        return question.id === id
-          ? { ...question, user_answer: selectedAnswer }
-          : question;
+        if (question.id === id) {
+          return { ...question, user_answer: selectedAnswer };
+        } else {
+          return question;
+        }
       });
     });
   }
 
-  function checkAnswers(questions) {
+  function checkAnswers() {
     setShowAnswers(true);
+    let score = 0;
+    for (let qs of questions) {
+      if (qs.user_answer === qs.answer) {
+        score++;
+      }
+    }
+    return setCorrectAnswerScore(score);
   }
-
   return (
     <div className="container">
       <img className="blob-top" src={blobsTop} />
       <img className="blob-bottom" src={blobsBottom} />
       {start ? (
-        <div className="question-container">
-          {renderQuestions()}
-          <button onClick={checkAnswers}>Check answers</button>
+        <div>
+          <div className="question-container">
+            {renderQuestions()}
+            {showAnswers ? (
+              <div>
+                <h2>Your score is: {correctAnswerScore}</h2>
+                <button onClick={startGame}>Play again</button>
+              </div>
+            ) : (
+              <button onClick={checkAnswers}>Check answers</button>
+            )}
+          </div>
         </div>
       ) : (
         <div className="intro">
